@@ -1,0 +1,11 @@
+{
+    "watch": [
+        "build/"
+    ],
+    "extensions": "js",
+    "events": {
+        "restart": "echo restart",
+        "start": "echo start"
+    },
+    "exec": "node"
+}
