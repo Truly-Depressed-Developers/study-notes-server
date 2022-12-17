@@ -61,8 +61,8 @@ app.post("/get_notes", async (req: Request<{}, {}, { id_university: number | und
     return res.send(result.data);
 })
 
-app.post("/add_note", async (req: Request<{}, {}, { id_author: number, id_degree_course: number, id_subject: number, title: string, content: string }>, res) => {
-    const result = await database.addNote(req.body.id_author, req.body.id_degree_course, req.body.id_subject, req.body.title, req.body.content);
+app.post("/add_note", async (req: Request<{}, {}, { id_author: number, id_degree_course: number, id_subject: number, title: string, url: string }>, res) => {
+    const result = await database.addNote(req.body.id_author, req.body.id_degree_course, req.body.id_subject, req.body.title, req.body.url);
 
     if (result.success === false) {
         return res.status(400).send({ status: false })

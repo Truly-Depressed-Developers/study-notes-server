@@ -64,7 +64,7 @@ export default class Database {
     }
 
     async getOneQuestion(id: number) {
-        const sql = `SELECT questions.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, questions.title, questions.content, questions.timestamp
+        const sql = `SELECT questions.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, questions.title, questions.url, questions.timestamp
             FROM questions 
             INNER JOIN users ON questions.id_author = users.id
             INNER JOIN degree_courses ON questions.id_degree_course = degree_courses.id
@@ -80,7 +80,7 @@ export default class Database {
             degree_course: string,
             subject: string,
             title: string,
-            content: string,
+            url: string,
             timestamp: string,
         }
 
@@ -115,7 +115,7 @@ export default class Database {
     }
 
     async getOneNote(id: number) {
-        const sql = `SELECT notes.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, notes.title, notes.content, notes.timestamp, notes.upvotes, notes.approved
+        const sql = `SELECT notes.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, notes.title, notes.url, notes.timestamp, notes.upvotes, notes.approved
             FROM notes 
             INNER JOIN users ON notes.id_author = users.id
             INNER JOIN degree_courses ON notes.id_degree_course = degree_courses.id
@@ -131,7 +131,7 @@ export default class Database {
             degree_course: string,
             subject: string,
             title: string,
-            content: string,
+            url: string,
             timestamp: string,
             upvotes: number,
             approved: boolean,
@@ -183,12 +183,12 @@ export default class Database {
         return await this.query<queryType>(sql, bindsArr);
     }
 
-    async addNote(id_author: number, id_degree_course: number, id_subject: number, title: string, content: string) {
-        const sql = `INSERT INTO notes (id_author, id_degree_course, id_subject, title, content)
+    async addNote(id_author: number, id_degree_course: number, id_subject: number, title: string, url: string) {
+        const sql = `INSERT INTO notes (id_author, id_degree_course, id_subject, title, url)
                     VALUES(?, ?, ?, ?, ?);
         `
 
-        return await this.query(sql, [id_author, id_degree_course, id_subject, title, content])
+        return await this.query(sql, [id_author, id_degree_course, id_subject, title, url])
     }
 
     async getUniversities() {
