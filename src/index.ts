@@ -42,7 +42,11 @@ app.post("/login", async (req, res) => {
         sameSite: false,
     })
 
-    return res.send({ description: "Logowanie powiodło się" });
+    return res.send({
+        description: "Logowanie powiodło się",
+        id: result.data[0].id,
+        username: username
+    });
 })
 
 // : Request<{}, {}, { id_degree_course: number | null, id_subject: number | null}>
