@@ -61,12 +61,21 @@ app.post("/get_notes", async (req: Request<{}, {}, { id_university: number | und
     return res.send(result.data);
 })
 
-app.post("/get_one_question", async (req: Request<{}, {}, { id_question: number | undefined }>, res) => {
-    if (req.body.id_question === undefined) return res.status(400).send({ description: "Wystąpił błąd" });
-    const result = await database.getOneQuestion(req.body.id_question);
+app.post("/get_one_question", async (req: Request<{}, {}, { id: number | undefined }>, res) => {
+    if (req.body.id === undefined) return res.status(400).send({ description: "Nie podano id" });
+    const result = await database.getOneQuestion(req.body.id);
 
     if (result === null) return res.status(400).send({ description: "Wystąpił błąd" });
 
+    return res.send(result);
+})
+
+app.post("/get_one_note", async (req: Request<{}, {}, { id: number | undefined }>, res) => {
+    if (req.body.id === undefined) return res.status(400).send({ description: "Nie podano id" });
+    const result = await database.getOneNote(req.body.id);
+
+    if (result === null) return res.status(400).send({ description: "Wystąpił błąd" });
+    console.log(result)
     return res.send(result);
 })
 

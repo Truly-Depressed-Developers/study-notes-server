@@ -7,15 +7,6 @@ const user = "sheepyourhack4"
 const password = "h4VktwjGtf5cjy"
 const database = "sheepyourhack4"
 
-type queryQuestionType = {
-    id: number,
-    username: string,
-    university: string,
-    degree_course: string,
-    subject: string,
-    title: string,
-    timestamp: string,
-}
 
 export default class Database {
     connection: mysql.Connection
@@ -59,11 +50,21 @@ export default class Database {
             ${whereStatement.length != 0 ? `WHERE ${whereStatement.join(" AND ")}` : ""}
             `
 
+        type queryQuestionType = {
+            id: number,
+            username: string,
+            university: string,
+            degree_course: string,
+            subject: string,
+            title: string,
+            timestamp: string,
+        }
+
         return await this.query<queryQuestionType>(sql, bindsArr);
     }
 
-    async getOneQuestion(id_question: number) {
-        const sql = `SELECT questions.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, questions.title, questions.timestamp
+    async getOneQuestion(id: number) {
+        const sql = `SELECT questions.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, questions.title, questions.content, questions.timestamp
             FROM questions 
             INNER JOIN users ON questions.id_author = users.id
             INNER JOIN degree_courses ON questions.id_degree_course = degree_courses.id
@@ -72,7 +73,18 @@ export default class Database {
             WHERE questions.id = ?
         `
 
-        let questionInfo = await this.query<queryQuestionType>(sql, [id_question]);
+        type queryQuestionType = {
+            id: number,
+            username: string,
+            university: string,
+            degree_course: string,
+            subject: string,
+            title: string,
+            content: string,
+            timestamp: string,
+        }
+
+        let questionInfo = await this.query<queryQuestionType>(sql, [id]);
 
         const sql1 = `SELECT users.username, question_answers.content, question_answers.timestamp, question_answers.upvotes, question_answers.best_answer
         FROM question_answers
@@ -87,7 +99,7 @@ export default class Database {
             upvotes: number,
             best_answer: 0 | 1
         };
-        const answersInfo = await this.query<queryAnswerType>(sql1, [id_question]);
+        const answersInfo = await this.query<queryAnswerType>(sql1, [id]);
 
         if (questionInfo.success === false || answersInfo.success === false) {
             return null;
@@ -102,6 +114,38 @@ export default class Database {
         }
     }
 
+    async getOneNote(id: number) {
+        const sql = `SELECT notes.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, notes.title, notes.content, notes.timestamp
+            FROM notes 
+            INNER JOIN users ON notes.id_author = users.id
+            INNER JOIN degree_courses ON notes.id_degree_course = degree_courses.id
+            INNER JOIN subjects ON notes.id_subject = subjects.id
+            INNER JOIN universities ON degree_courses.id_university = universities.id
+            WHERE notes.id = ?
+        `
+
+        type queryNoteType = {
+            id: number,
+            username: string,
+            university: string,
+            degree_course: string,
+            subject: string,
+            title: string,
+            content: string,
+            timestamp: string,
+        }
+
+        let noteInfo = await this.query<queryNoteType>(sql, [id]);
+
+        if (noteInfo.success === false) {
+            return null;
+        }
+
+        if (noteInfo.data[0] == undefined) {
+            return {};
+        }
+        return noteInfo.data[0]
+    }
 
     async get_notes(id_university: number | undefined, id_degree_course: number | undefined, id_subject: number | undefined) {
         let whereStatement: string[] = [];
