@@ -1,12 +1,16 @@
 import Express, { Request } from "express"
 import Database from "./Database";
 import bodyParser from "body-parser";
+import cors from "cors"
 
 const app = Express();
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+app.use(cors({
+    origin: "*"
+}))
 
 
 const database = new Database();
@@ -20,7 +24,7 @@ app.get("/", (_, res) => {
 
 app.post("/login", async (req, res) => {
     if (!req.body.username || !req.body.password) {
-        return res.status(400).send({ description: "Wystąpił błąd logowania" });
+        return res.status(400).send({ description: "Nie podano username lub password" });
     }
 
     const username = req.body.username.toString()
@@ -61,7 +65,7 @@ app.post("/get_notes", async (req: Request<{}, {}, { id_university: number | und
 
 app.post("/register", async (req, res) => {
     if (!req.body.username || !req.body.password) {
-        return res.status(400).send({ description: "Wystąpił błąd logowania" });
+        return res.status(400).send({ description: "Nie podano username lub password" });
     }
 
     const username = req.body.username.toString()
