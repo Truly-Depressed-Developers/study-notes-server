@@ -7,6 +7,16 @@ const user = "sheepyourhack4"
 const password = "h4VktwjGtf5cjy"
 const database = "sheepyourhack4"
 
+type queryQuestionType = {
+    id: number,
+    username: string,
+    university: string,
+    degree_course: string,
+    subject: string,
+    title: string,
+    timestamp: string,
+}
+
 export default class Database {
     connection: mysql.Connection
 
@@ -29,7 +39,7 @@ export default class Database {
         return await this.query<{ id: number }>(sql, [username, password]);
     }
 
-    async get_questions(id_university: number | undefined, id_degree_course: number | undefined, id_subject: number | undefined) {
+    async getQuestions(id_university: number | undefined, id_degree_course: number | undefined, id_subject: number | undefined) {
         let whereStatement: string[] = [];
         let bindsArr: any[] = [];
 
@@ -49,17 +59,49 @@ export default class Database {
             ${whereStatement.length != 0 ? `WHERE ${whereStatement.join(" AND ")}` : ""}
             `
 
-        type queryType = {
-            id: number,
-            username: string,
-            university: string,
-            degree_course: string,
-            subject: string,
-            title: string,
-            timestamp: string,
-        }
-        return await this.query<queryType>(sql, bindsArr);
+        return await this.query<queryQuestionType>(sql, bindsArr);
     }
+
+    async getOneQuestion(id_question: number) {
+        const sql = `SELECT questions.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, questions.title, questions.timestamp
+            FROM questions 
+            INNER JOIN users ON questions.id_author = users.id
+            INNER JOIN degree_courses ON questions.id_degree_course = degree_courses.id
+            INNER JOIN subjects ON questions.id_subject = subjects.id
+            INNER JOIN universities ON degree_courses.id_university = universities.id
+            WHERE questions.id = ?
+        `
+
+        let questionInfo = await this.query<queryQuestionType>(sql, [id_question]);
+
+        const sql1 = `SELECT users.username, question_answers.content, question_answers.timestamp, question_answers.upvotes, question_answers.best_answer
+        FROM question_answers
+        INNER JOIN users ON question_answers.id_author = users.id
+        WHERE question_answers.id_question = ?
+        `
+
+        type queryAnswerType = {
+            username: string,
+            content: string,
+            timestamp: string,
+            upvotes: number,
+            best_answer: 0 | 1
+        };
+        const answersInfo = await this.query<queryAnswerType>(sql1, [id_question]);
+
+        if (questionInfo.success === false || answersInfo.success === false) {
+            return null;
+        }
+
+        if (questionInfo.data[0] == undefined) {
+            return {};
+        }
+        return {
+            ...questionInfo.data[0],
+            answers: answersInfo.data
+        }
+    }
+
 
     async get_notes(id_university: number | undefined, id_degree_course: number | undefined, id_subject: number | undefined) {
         let whereStatement: string[] = [];
