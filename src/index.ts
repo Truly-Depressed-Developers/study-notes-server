@@ -61,6 +61,16 @@ app.post("/get_notes", async (req: Request<{}, {}, { id_university: number | und
     return res.send(result.data);
 })
 
+app.post("/add_note", async (req: Request<{}, {}, { id_author: number, id_degree_course: number, id_subject: number, title: string, content: string }>, res) => {
+    const result = await database.addNote(req.body.id_author, req.body.id_degree_course, req.body.id_subject, req.body.title, req.body.content);
+
+    if (result.success === false) {
+        return res.status(400).send({ status: false })
+    }
+
+    return res.send({ status: true });
+});
+
 app.post("/get_one_question", async (req: Request<{}, {}, { id: number | undefined }>, res) => {
     if (req.body.id === undefined) return res.status(400).send({ description: "Nie podano id" });
     const result = await database.getOneQuestion(req.body.id);

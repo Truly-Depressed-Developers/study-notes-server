@@ -183,6 +183,14 @@ export default class Database {
         return await this.query<queryType>(sql, bindsArr);
     }
 
+    async addNote(id_author: number, id_degree_course: number, id_subject: number, title: string, content: string) {
+        const sql = `INSERT INTO notes (id_author, id_degree_course, id_subject, title, content)
+                    VALUES(?, ?, ?, ?, ?);
+        `
+
+        return await this.query(sql, [id_author, id_degree_course, id_subject, title, content])
+    }
+
     async getUniversities() {
         const sql = "SELECT * FROM universities"
 
