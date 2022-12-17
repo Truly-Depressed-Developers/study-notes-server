@@ -60,6 +60,41 @@ export default class Database {
         }
         return await this.query<queryType>(sql, bindsArr);
     }
+
+    async get_notes(id_university: number | undefined, id_degree_course: number | undefined, id_subject: number | undefined) {
+        let whereStatement: string[] = [];
+        let bindsArr: any[] = [];
+
+        for (const el of [{ id_university }, { id_degree_course }, { id_subject }]) {
+            if (Object.values(el)[0] === undefined) continue;
+
+            whereStatement.push(`${Object.keys(el)[0]}=?`)
+            bindsArr.push(Object.values(el)[0])
+        }
+
+        const sql = `SELECT notes.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, notes.title, notes.timestamp, notes.upvotes, notes.approved
+            FROM notes 
+            INNER JOIN users ON notes.id_author = users.id
+            INNER JOIN degree_courses ON notes.id_degree_course = degree_courses.id
+            INNER JOIN subjects ON notes.id_subject = subjects.id
+            INNER JOIN universities ON degree_courses.id_university = universities.id
+            ${whereStatement.length != 0 ? `WHERE ${whereStatement.join(" AND ")}` : ""}
+            `
+
+        type queryType = {
+            id: number,
+            username: string,
+            university: string,
+            degree_course: string,
+            subject: string,
+            title: string,
+            timestamp: string,
+            upvotes: number,
+            approved: boolean,
+        }
+        return await this.query<queryType>(sql, bindsArr);
+    }
+
     async getUserID(username: string) {
         const sql = "SELECT id FROM users WHERE username=?"
         return await this.query<{ id: number }>(sql, [username]);
