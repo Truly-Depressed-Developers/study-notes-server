@@ -41,7 +41,7 @@ export default class Database {
             bindsArr.push(Object.values(el)[0])
         }
 
-        const sql = `SELECT questions.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, questions.title, questions.timestamp
+        const sql = `SELECT questions.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, questions.title, questions.points, questions.excercise_set, questions.timestamp
             FROM questions 
             INNER JOIN users ON questions.id_author = users.id
             INNER JOIN degree_courses ON questions.id_degree_course = degree_courses.id
@@ -57,6 +57,8 @@ export default class Database {
             degree_course: string,
             subject: string,
             title: string,
+            points: number,
+            excercise_set: string,
             timestamp: string,
         }
 
@@ -64,7 +66,7 @@ export default class Database {
     }
 
     async getOneQuestion(id: number) {
-        const sql = `SELECT questions.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, questions.title, questions.url, questions.timestamp
+        const sql = `SELECT questions.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, questions.title, questions.content, questions.points, questions.excercise_set, questions.timestamp
             FROM questions 
             INNER JOIN users ON questions.id_author = users.id
             INNER JOIN degree_courses ON questions.id_degree_course = degree_courses.id
@@ -80,7 +82,7 @@ export default class Database {
             degree_course: string,
             subject: string,
             title: string,
-            url: string,
+            content: string,
             timestamp: string,
         }
 
@@ -229,9 +231,9 @@ export default class Database {
         return await this.query<queryQuestionType>(sql);
     }
 
-    async addQuestion(id_author: number, id_degree_course: number, id_subject: number, title: string, content: string) {
-        const sql = "INSERT INTO questions (id_author, id_degree_course, id_subject, title, content) VALUES (?, ?, ?, ?, ?)"
-        return await this.query(sql, [id_author, id_degree_course, id_subject, title, content]);
+    async addQuestion(id_author: number, id_degree_course: number, id_subject: number, title: string, points: number, excercise_set: string, content: string) {
+        const sql = "INSERT INTO questions (id_author, id_degree_course, id_subject, title, points, excercise_set content) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        return await this.query(sql, [id_author, id_degree_course, id_subject, title, points, excercise_set, content]);
     }
 
     async getUserID(username: string) {

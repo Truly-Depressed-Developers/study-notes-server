@@ -9,14 +9,13 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(cors({
-    origin: "*"
+    origin: "*",
+    credentials: true,
 }))
 
 
 const database = new Database();
 
-// database.get_questions()
-database.login("admin", "admin")
 
 app.get("/", (_, res) => {
     res.send("Hello world!");
@@ -35,7 +34,13 @@ app.post("/login", async (req, res) => {
         return res.status(400).send({ description: "Wystąpił błąd logowania" });
     }
 
-    res.cookie("id", result.data[0].id)
+    console.log(`ustawiam cookie id na ${result.data[0].id}`)
+    res.cookie("id", result.data[0].id, {
+        expires: new Date(Date.now() + 9999999),
+        httpOnly: false,
+        secure: false,
+        sameSite: false,
+    })
 
     return res.send({ description: "Logowanie powiodło się" });
 })
@@ -146,12 +151,14 @@ app.post("/get_subjects", async (_, res) => {
     return res.send(result.data);
 })
 
-app.post("/add_question", async (req: Request<{}, {}, { id_author: number, id_degree_course: number, id_subject: number, title: string, content: string }>, res) => {
+app.post("/add_question", async (req: Request<{}, {}, { id_author: number, id_degree_course: number, id_subject: number, title: string, points: number, excercise_set: string, content: string }>, res) => {
     const result = await database.addQuestion(
         req.body.id_author,
         req.body.id_degree_course,
         req.body.id_subject,
         req.body.title,
+        req.body.points,
+        req.body.excercise_set,
         req.body.content,
     )
 
