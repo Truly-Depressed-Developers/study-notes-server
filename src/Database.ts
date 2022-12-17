@@ -83,6 +83,8 @@ export default class Database {
             subject: string,
             title: string,
             content: string,
+            points: number,
+            excercise_set: string,
             timestamp: string,
         }
 
