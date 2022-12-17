@@ -47,6 +47,16 @@ app.post("/get_questions", async (req: Request<{}, {}, { id_university: number |
     return res.send(result.data);
 })
 
+app.post("/get_notes", async (req: Request<{}, {}, { id_university: number | undefined, id_degree_course: number | undefined, id_subject: number | undefined }>, res) => {
+    const result = await database.get_notes(req.body.id_university, req.body.id_degree_course, req.body.id_subject);
+
+    if (result.success === false) {
+        return res.status(400).send({ description: "Wystąpił błąd" });
+    }
+
+    return res.send(result.data);
+})
+
 // app.post("/get_question", async())
 
 app.post("/register", async (req, res) => {
