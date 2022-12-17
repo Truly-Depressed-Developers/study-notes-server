@@ -29,6 +29,16 @@ export default class Database {
         return await this.query<{ id: number }>(sql, [username, password]);
     }
 
+    async getUserID(username: string) {
+        const sql = "SELECT id FROM users WHERE username=?"
+        return await this.query<{ id: number }>(sql, [username]);
+    }
+
+    async register(username: string, password: string) {
+        const sql = "INSERT INTO users (username, password) VALUES (?, ?)"
+        return await this.query(sql, [username, password]);
+    }
+
     // get_questions() {
     //     const sql = "SELECT * FROM questions"
     //     this.connection.query(sql, (err, result) => {
