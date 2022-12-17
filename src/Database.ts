@@ -239,6 +239,11 @@ export default class Database {
         return await this.query(sql, [username, password]);
     }
 
+    async addAnswer(id_author: number, id_question: number, content: string) {
+        const sql = "INSERT INTO question_answers (id_author, id_question, content) VALUES (?, ?, ?)"
+        return await this.query(sql, [id_author, id_question, content]);
+    }
+
     // get_questions() {
     //     const sql = "SELECT * FROM questions"
     //     this.connection.query(sql, (err, result) => {

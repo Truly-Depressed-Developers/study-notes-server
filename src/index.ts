@@ -162,6 +162,17 @@ app.post("/add_question", async (req: Request<{}, {}, { id_author: number, id_de
     return res.send({ status: true });
 })
 
+
+app.post("/add_answer", async (req: Request<{}, {}, { id_author: number, id_question: number, content: string }>, res) => {
+    const result = await database.addAnswer(req.body.id_author, req.body.id_question, req.body.content);
+
+    if (result.success === false) {
+        return res.status(400).send({ status: false });
+    }
+
+    return res.send({ status: true });
+})
+
 app.listen(3000, () => {
     console.log("Listening on 3000");
 })
