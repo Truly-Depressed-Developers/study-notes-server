@@ -147,11 +147,6 @@ app.post("/get_subjects", async (_, res) => {
 })
 
 app.post("/add_question", async (req: Request<{}, {}, { id_author: number, id_degree_course: number, id_subject: number, title: string, content: string }>, res) => {
-    console.log(req.body)
-    if (!req.body.id_author || !req.body.id_degree_course || !req.body.id_subject || !req.body.title || !req.body.content) {
-        return res.status(400).send({ description: "Nie podano jednego z 5 argumentów" });
-    }
-
     const result = await database.addQuestion(
         req.body.id_author,
         req.body.id_degree_course,
@@ -161,10 +156,10 @@ app.post("/add_question", async (req: Request<{}, {}, { id_author: number, id_de
     )
 
     if (result.success === false) {
-        return res.status(400).send({ description: "Wystąpił błąd" });
+        return res.status(400).send({ status: false });
     }
 
-    return res.send({ description: "Dodanie pytania powiodło się" });
+    return res.send({ status: true });
 })
 
 app.listen(3000, () => {
