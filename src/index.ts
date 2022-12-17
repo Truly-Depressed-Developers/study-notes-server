@@ -136,6 +136,27 @@ app.post("/get_subjects", async (_, res) => {
     return res.send(result.data);
 })
 
+app.post("/add_question", async (req: Request<{}, {}, { id_author: number, id_degree_course: number, id_subject: number, title: string, content: string }>, res) => {
+    console.log(req.body)
+    if (!req.body.id_author || !req.body.id_degree_course || !req.body.id_subject || !req.body.title || !req.body.content) {
+        return res.status(400).send({ description: "Nie podano jednego z 5 argumentów" });
+    }
+
+    const result = await database.addQuestion(
+        req.body.id_author,
+        req.body.id_degree_course,
+        req.body.id_subject,
+        req.body.title,
+        req.body.content,
+    )
+
+    if (result.success === false) {
+        return res.status(400).send({ description: "Wystąpił błąd" });
+    }
+
+    return res.send({ description: "Dodanie pytania powiodło się" });
+})
+
 app.listen(3000, () => {
     console.log("Listening on 3000");
 })
