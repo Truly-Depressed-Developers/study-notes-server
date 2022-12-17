@@ -1,4 +1,4 @@
-import Express from "express"
+import Express, { Request } from "express"
 import Database from "./Database";
 import bodyParser from "body-parser";
 
@@ -36,6 +36,19 @@ app.post("/login", async (req, res) => {
     return res.send({ description: "Logowanie powiodło się" });
 })
 
+// : Request<{}, {}, { id_degree_course: number | null, id_subject: number | null}>
+app.post("/get_questions", async (req: Request<{}, {}, { id_university: number | undefined, id_degree_course: number | undefined, id_subject: number | undefined }>, res) => {
+    const result = await database.get_questions(req.body.id_university, req.body.id_degree_course, req.body.id_subject);
+
+    if (result.success === false) {
+        return res.status(400).send({ description: "Wystąpił błąd" });
+    }
+
+    return res.send(result.data);
+})
+
+// app.post("/get_question", async())
+
 app.post("/register", async (req, res) => {
     if (!req.body.username || !req.body.password) {
         return res.status(400).send({ description: "Wystąpił błąd logowania" });
@@ -60,7 +73,6 @@ app.post("/register", async (req, res) => {
 
     return res.send({ description: "Rejestracja powiodła się" });
 })
-
 
 app.listen(3000, () => {
     console.log("Listening on 3000");
