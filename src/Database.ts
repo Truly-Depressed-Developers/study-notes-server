@@ -35,7 +35,7 @@ export default class Database {
         let bindsArr: any[] = [];
 
         for (const el of [{ id_university }, { id_degree_course }, { id_subject }]) {
-            if (Object.values(el)[0] === undefined) continue;
+            if (Object.values(el)[0] === undefined || Object.values(el)[0] == -1) continue;
 
             whereStatement.push(`${Object.keys(el)[0]}=?`)
             bindsArr.push(Object.values(el)[0])
@@ -150,11 +150,13 @@ export default class Database {
     }
 
     async get_notes(id_university: number | undefined, id_degree_course: number | undefined, id_subject: number | undefined) {
+        console.log(id_university, id_degree_course, id_subject)
+
         let whereStatement: string[] = [];
         let bindsArr: any[] = [];
 
         for (const el of [{ id_university }, { id_degree_course }, { id_subject }]) {
-            if (Object.values(el)[0] === undefined) continue;
+            if (Object.values(el)[0] === undefined || Object.values(el)[0] == -1) continue;
 
             whereStatement.push(`${Object.keys(el)[0]}=?`)
             bindsArr.push(Object.values(el)[0])
@@ -207,7 +209,6 @@ export default class Database {
             id: number,
             name: string,
         }
-        console.log(id_university)
         if (id_university) {
             const sql = "SELECT id, name FROM degree_courses WHERE id_university=?"
             return await this.query<queryQuestionType>(sql, [id_university]);

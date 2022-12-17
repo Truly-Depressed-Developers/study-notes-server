@@ -52,6 +52,7 @@ app.post("/get_questions", async (req: Request<{}, {}, { id_university: number |
 })
 
 app.post("/get_notes", async (req: Request<{}, {}, { id_university: number | undefined, id_degree_course: number | undefined, id_subject: number | undefined }>, res) => {
+    console.log(req.body)
     const result = await database.get_notes(req.body.id_university, req.body.id_degree_course, req.body.id_subject);
 
     if (result.success === false) {
@@ -85,7 +86,6 @@ app.post("/get_one_note", async (req: Request<{}, {}, { id: number | undefined }
     const result = await database.getOneNote(req.body.id);
 
     if (result === null) return res.status(400).send({ description: "Wystąpił błąd" });
-    console.log(result)
     return res.send(result);
 })
 
