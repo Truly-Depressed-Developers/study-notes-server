@@ -202,15 +202,19 @@ export default class Database {
         return await this.query<queryQuestionType>(sql);
     }
 
-    async getCourses() {
-        const sql = "SELECT id, name FROM degree_courses"
-
+    async getCourses(id_university: number | undefined) {
         type queryQuestionType = {
             id: number,
             name: string,
         }
-
-        return await this.query<queryQuestionType>(sql);
+        console.log(id_university)
+        if (id_university) {
+            const sql = "SELECT id, name FROM degree_courses WHERE id_university=?"
+            return await this.query<queryQuestionType>(sql, [id_university]);
+        } else {
+            const sql = "SELECT id, name FROM degree_courses"
+            return await this.query<queryQuestionType>(sql);
+        }
     }
 
     async getSubjects() {

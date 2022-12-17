@@ -126,8 +126,8 @@ app.post("/get_universities", async (_, res) => {
     return res.send(result.data);
 })
 
-app.post("/get_courses", async (_, res) => {
-    const result = await database.getCourses();
+app.post("/get_courses", async (req: Request<{}, {}, { id_university: number }>, res) => {
+    const result = await database.getCourses(req.body.id_university);
 
     if (result.success === false) {
         return res.status(400).send({ description: "Wystąpił błąd" });
