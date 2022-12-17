@@ -115,7 +115,7 @@ export default class Database {
     }
 
     async getOneNote(id: number) {
-        const sql = `SELECT notes.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, notes.title, notes.content, notes.timestamp
+        const sql = `SELECT notes.id, users.username, universities.name as university, degree_courses.name as degree_course, subjects.name as subject, notes.title, notes.content, notes.timestamp, notes.upvotes, notes.approved
             FROM notes 
             INNER JOIN users ON notes.id_author = users.id
             INNER JOIN degree_courses ON notes.id_degree_course = degree_courses.id
@@ -133,6 +133,8 @@ export default class Database {
             title: string,
             content: string,
             timestamp: string,
+            upvotes: number,
+            approved: boolean,
         }
 
         let noteInfo = await this.query<queryNoteType>(sql, [id]);
