@@ -183,6 +183,39 @@ export default class Database {
         return await this.query<queryType>(sql, bindsArr);
     }
 
+    async getUniversities() {
+        const sql = "SELECT * FROM universities"
+
+        type queryQuestionType = {
+            id: number,
+            name: string,
+        }
+
+        return await this.query<queryQuestionType>(sql);
+    }
+
+    async getCourses() {
+        const sql = "SELECT id, name FROM degree_courses"
+
+        type queryQuestionType = {
+            id: number,
+            name: string,
+        }
+
+        return await this.query<queryQuestionType>(sql);
+    }
+
+    async getSubjects() {
+        const sql = "SELECT * FROM subjects"
+
+        type queryQuestionType = {
+            id: number,
+            name: string,
+        }
+
+        return await this.query<queryQuestionType>(sql);
+    }
+
     async getUserID(username: string) {
         const sql = "SELECT id FROM users WHERE username=?"
         return await this.query<{ id: number }>(sql, [username]);
