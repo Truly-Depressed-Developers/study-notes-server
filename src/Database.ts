@@ -48,6 +48,7 @@ export default class Database {
             INNER JOIN subjects ON questions.id_subject = subjects.id
             INNER JOIN universities ON degree_courses.id_university = universities.id
             ${whereStatement.length != 0 ? `WHERE ${whereStatement.join(" AND ")}` : ""}
+            ORDER BY questions.points DESC
             `
 
         type queryQuestionType = {
@@ -173,6 +174,7 @@ export default class Database {
             INNER JOIN subjects ON notes.id_subject = subjects.id
             INNER JOIN universities ON degree_courses.id_university = universities.id
             ${whereStatement.length != 0 ? `WHERE ${whereStatement.join(" AND ")}` : ""}
+            ORDER BY notes.upvotes DESC
             `
 
         type queryType = {
