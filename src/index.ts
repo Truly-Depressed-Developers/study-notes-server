@@ -106,6 +106,36 @@ app.post("/register", async (req, res) => {
     return res.send({ description: "Rejestracja powiodła się" });
 })
 
+app.post("/get_universities", async (_, res) => {
+    const result = await database.getUniversities();
+
+    if (result.success === false) {
+        return res.status(400).send({ description: "Wystąpił błąd" });
+    }
+
+    return res.send(result.data);
+})
+
+app.post("/get_courses", async (_, res) => {
+    const result = await database.getCourses();
+
+    if (result.success === false) {
+        return res.status(400).send({ description: "Wystąpił błąd" });
+    }
+
+    return res.send(result.data);
+})
+
+app.post("/get_subjects", async (_, res) => {
+    const result = await database.getSubjects();
+
+    if (result.success === false) {
+        return res.status(400).send({ description: "Wystąpił błąd" });
+    }
+
+    return res.send(result.data);
+})
+
 app.listen(3000, () => {
     console.log("Listening on 3000");
 })
