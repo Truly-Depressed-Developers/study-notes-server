@@ -1,12 +1,16 @@
 import Express, { Request } from "express"
 import Database from "./Database";
 import bodyParser from "body-parser";
+import cors from "cors"
 
 const app = Express();
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+app.use(cors({
+    origin: "*"
+}))
 
 
 const database = new Database();
@@ -20,7 +24,7 @@ app.get("/", (_, res) => {
 
 app.post("/login", async (req, res) => {
     if (!req.body.username || !req.body.password) {
-        return res.status(400).send({ description: "Wystąpił błąd logowania" });
+        return res.status(400).send({ description: "Nie podano username lub password" });
     }
 
     const username = req.body.username.toString()
@@ -47,6 +51,16 @@ app.post("/get_questions", async (req: Request<{}, {}, { id_university: number |
     return res.send(result.data);
 })
 
+app.post("/get_notes", async (req: Request<{}, {}, { id_university: number | undefined, id_degree_course: number | undefined, id_subject: number | undefined }>, res) => {
+    const result = await database.get_notes(req.body.id_university, req.body.id_degree_course, req.body.id_subject);
+
+    if (result.success === false) {
+        return res.status(400).send({ description: "Wystąpił błąd" });
+    }
+
+    return res.send(result.data);
+})
+
 app.post("/get_one_question", async (req: Request<{}, {}, { id_question: number | undefined }>, res) => {
     if (req.body.id_question === undefined) return res.status(400).send({ description: "Wystąpił błąd" });
     const result = await database.getOneQuestion(req.body.id_question);
@@ -60,7 +74,7 @@ app.post("/get_one_question", async (req: Request<{}, {}, { id_question: number 
 
 app.post("/register", async (req, res) => {
     if (!req.body.username || !req.body.password) {
-        return res.status(400).send({ description: "Wystąpił błąd logowania" });
+        return res.status(400).send({ description: "Nie podano username lub password" });
     }
 
     const username = req.body.username.toString()
