@@ -3,7 +3,7 @@
 
 Server for an app created at SheepYourHack4 Hackathon 2022
 
-This repository is only for server. If you are looking for a client app, see the main repository at [Spookyless/sheepyourhack4](https://github.com/Truly-Depressed-Developers/sheepyourhack4-client)
+This repository is only for server. If you are looking for a client app, see the main repository at [Truly-Depressed-Developers/sheepyourhack4-client](https://github.com/Truly-Depressed-Developers/sheepyourhack4-client)
 
 ## Features
 
