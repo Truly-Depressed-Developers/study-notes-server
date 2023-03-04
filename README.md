@@ -1,9 +1,6 @@
+# Study Notes - server
 
-# SheepYourHack4 server
-
-Server for an app created at SheepYourHack4 Hackathon 2022
-
-This repository is only for server. If you are looking for a client app, see the main repository at [Truly-Depressed-Developers/sheepyourhack4-client](https://github.com/Truly-Depressed-Developers/sheepyourhack4-client)
+This repository only contains the server's code. For the main repository, see [Truly-Depressed-Developers/study-notes](https://github.com/Truly-Depressed-Developers/study-notes)
 
 ## Features
 
@@ -267,15 +264,7 @@ npm run start
     </tr>
 </table>
 					
-## Authors
-
-- [@rubikon02](https://github.com/rubikon02)
-- [@MBrosik](https://github.com/MBrosik)
 
 ## License
 
 This project is licensed under [MIT](./LICENSE) license.
-
-## Acknowledgements
-
- - [Wyższa Szkoła Ekonomii i Informatyki](https://wsei.edu.pl/) for organizing the whole event and heartwarming welcome
